@@ -142,6 +142,33 @@ actions: {
   store.dispatch('getData')//使用actions
 ```
 
+如果想知道Action里面的异步操作是否成功完成可以在action里面直接返回一个promise，在需要的组件中调用
+
+```js
+actions: {
+    getData(context) {
+       return new Promise((reslove,reject)=>{
+        if(){
+
+        //成功的话
+            reslove()//把promise的状态从进行中改为成功
+        }else{
+            //失败的话
+            reject()//把promise的状态从进行中改为失败
+        }
+    })
+    },
+  },
+ //在需要使用的组件当中
+      const promise=store.dispatch('getData')
+      promise.then(res=>{
+          
+      }).catch(err=>{
+          
+      })
+
+```
+
 
 
 ### 5.Module
