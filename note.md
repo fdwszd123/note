@@ -222,8 +222,27 @@ actions: {
    
    
    
-2. 
+5. mapActions()
+
+   ```js
+   import { mapActions } from 'vuex'
+   
+   export default {
+     // ...
+     methods: {
+       ...mapActions([
+         'increment', // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
+   
+         // `mapActions` 也支持载荷：
+         'incrementBy' // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+       ]),
+       ...mapActions({
+         add: 'increment' // 将 `this.add()` 映射为 `this.$store.dispatch('increment')`
+       })
+     }
+   }
+   ```
 
    
 
-   
+6. 
