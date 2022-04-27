@@ -162,9 +162,9 @@ actions: {
  //在需要使用的组件当中
       const promise=store.dispatch('getData')
       promise.then(res=>{
-          
+          //成功
       }).catch(err=>{
-          
+          //失败
       })
 
 ```
@@ -173,7 +173,37 @@ actions: {
 
 ### 5.Module
 
-### 其他方法
+每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块.
+
+```js
+const moduleA = {
+  namespaced:true,
+  state: () => ({ ... }),
+  mutations: { ... },
+  actions: { ... },
+  getters: { ... }
+}
+
+const moduleB = {
+  state: () => ({ ... }),
+  mutations: { ... },
+  actions: { ... }
+}
+
+const store = createStore({
+  modules: {
+    a: moduleA,
+    b: moduleB
+  }
+})
+
+store.state.a // -> moduleA 的状态
+store.state.b // -> moduleB 的状态
+```
+
+在模块化的时候vuex会把getters，actions，mutations，合并到一起也就是说当我们调用这些的时候是不分模块的，要是我们想调用某一个模块的时候就得开启命名空间namespaced
+
+### 辅助函数
 
 1. useStore()
 
@@ -270,6 +300,33 @@ actions: {
    }
    ```
 
+   当使用了module进行了模块化之后使用这些辅助函数
+
+   ```js
+   //第一种写法：
+   //多传一个参数指定命名空间
+   computed:{
+       ...mapState('home',["name","age"])
+       ...mapGetters('home',['dobuleCounter'])
+   }
+   methods:{
+       ...mapMutations("home",["add"])
+       ...mapActions("home",["get"])
+   }
+   //第二种写法
+   //直接使用vuex提供的辅助函数
+   import { createNamespacedHelpers } from "vuex";
+   const{mapState,mapGetters,mapMutations,mapActions}=createNamespacedHelpers('home')
+   computed:{
+       ...mapState(["name","age"])
+       ...mapGetters(['dobuleCounter'])
+   }
+   methods:{
+       ...mapMutations(["add"])
+       ...mapActions(["get"])
+   }
+   ```
+
    
 
-6. 
+   
