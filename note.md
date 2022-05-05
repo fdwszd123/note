@@ -4,76 +4,74 @@
 
 
 
-- ### 路由懒加载
+### 1.路由懒加载
 
-  ``` js
-  import(/*webpackChunkName:"home"*/ "../pages/home.vue")
-  //  /*webpackChunkName:"home"*/:分包的时候可以给定名称
-  ```
+``` js
+import(/*webpackChunkName:"home"*/ "../pages/home.vue")
+//  /*webpackChunkName:"home"*/:分包的时候可以给定名称
+```
+
+
+
+### 2.动态添加路由
+
+```js
+const categoryRoute = {
+  path: "/category",
+  component: () => import("../pages/category.vue"),
+};
+
+const homeAboutRoute = {
+  path: "homeAbout",
+  component: () => import("../pages/homeAbout.vue"),
+};
+router.addRoute(categoryRoute); //添加到了最外层
+router.addRoute("home", homeAboutRoute); //添加到子集
+```
 
   
 
-- ### 动态添加路由
+### 3.删除路由
 
-   ```js
-   const categoryRoute = {
-     path: "/category",
-     component: () => import("../pages/category.vue"),
-   };
+```js
+// 1.添加一个同名的路由给其他的组件
+router.removeRoute('home')
+// 3.调用addRoute方法后会返回一个方法，调用这个方法会删除这个路由
+const removeRoute = router.addRoute(categoryRoute);
+removeRoute()
+```
+
+### 4.路由的其他方法
+
+```js
+router.hasRoute() //判断是否有这个路由
+router.getRoutes() //获取一个包含所有路由的数组
+```
+
+### 5.路由导航守卫
+
+1.  beforeEach 
+
+```JS
+/*
+ *返回值
+ *1.false 不进行导航
+ *2.undefined或者不返回：进行默认导航
+ *3.字符串（路径）：跳转到对应的路径
+ *4.对象：类似于{path:"/home",query:{....}}
+ */
+router.beforeEach((to, from) => {
+  return false;
+});
+```
+
+2. 其他守卫
+
+   [其他守卫](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html)
+
    
-   const homeAboutRoute = {
-     path: "homeAbout",
-     component: () => import("../pages/homeAbout.vue"),
-   };
-   router.addRoute(categoryRoute); //添加到了最外层
-   router.addRoute("home", homeAboutRoute); //添加到子集
-   ```
-
-  
-
-- ### 删除路由
-
-   ```js
-   // 1.添加一个同名的路由给其他的组件
-   router.removeRoute('home')
-   // 3.调用addRoute方法后会返回一个方法，调用这个方法会删除这个路由
-   const removeRoute = router.addRoute(categoryRoute);
-   removeRoute()
-   ```
-
-+ ### 路由的其他方法
-
-  ```js
-  router.hasRoute() //判断是否有这个路由
-  router.getRoutes() //获取一个包含所有路由的数组
-  ```
-  
 
 
-+ ### 路由导航守卫
-
-  1.  beforeEach 
-
-  ```JS
-  /*
-   *返回值
-   *1.false 不进行导航
-   *2.undefined或者不返回：进行默认导航
-   *3.字符串（路径）：跳转到对应的路径
-   *4.对象：类似于{path:"/home",query:{....}}
-   */
-  router.beforeEach((to, from) => {
-    return false;
-  });
-  ```
-
-  2. 其他守卫
-
-     [其他守卫](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html)
-
-     
-
-  
 
 # vuex状态管理
 
@@ -203,7 +201,7 @@ store.state.b // -> moduleB 的状态
 
 在模块化的时候vuex会把getters，actions，mutations，合并到一起也就是说当我们调用这些的时候是不分模块的，要是我们想调用某一个模块的时候就得开启命名空间namespaced
 
-### 辅助函数
+### 6.辅助函数
 
 1. useStore()
 
@@ -327,6 +325,7 @@ store.state.b // -> moduleB 的状态
    }
    ```
 
-   
 
-   
+# nexttick
+
+将一个回调推迟到下一个Dom更新后去执行，在更改了一些数据后等dom更新后立即使用它
