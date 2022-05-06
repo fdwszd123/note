@@ -329,3 +329,97 @@ store.state.b // -> moduleB 的状态
 # nexttick
 
 将一个回调推迟到下一个Dom更新后去执行，在更改了一些数据后等dom更新后立即使用它
+
+# TS
+
+++++
+
+## 一.定义变量
+
+### 1.类型推导
+
+默认情况下进行赋值会将赋值的值的类型给这个变量
+
+## 二.变量类型
+
+### 1.any
+
+适用于变量类型不确定，或者是变量类型需要改变的时候
+
+### 2.unknown
+
+描述不确定的变量
+
+unknown类型只能赋值给any或者是unknown类型
+
+any可以赋值给任意类型
+
+### 3.void
+
+函数没有返回值
+
+### 4.never
+
+表示永远不会发生值的类型
+
+```JS
+//永远不会返回值
+function foo(): never {
+  while (true) {}
+}
+function error(): never {
+  throw new Error();
+}
+```
+
+### 5.tuple
+
+元组类型：多种元素的组合
+
+```js
+let tom: [string, number] = ['Tom', 25];
+//当元组类型的元素越界的时候越界的元素会被限制为每个类型的联合类型
+```
+
+
+
+## 三.类型断言
+
+### 1.as
+
+当有时候ts无法获取具体的类型信息时，我们需要进行断言
+
+### 2.非空类型断言
+
+```js
+function foo(message?: string) {
+    //!表示一定不是空
+  console.log(message!.length);
+}
+foo("hello");
+foo("fantasy");
+
+```
+
+### 3.可选链
+
+当对象的属性不存在时会短路，直接返回undefined，如果存在才会继续执行
+
+```js
+type Person = {
+  name: string;
+  friend?: {
+    name: string;
+    age?: number;
+  };
+};
+const info: Person = {
+  name: "fantasy",
+  //   friend: {
+  //     name: "jay",
+  //   },
+};
+console.log(info.name);
+console.log(info.friend?.name);//当friend属性有的时候去读取name属性，没有friend属性的时候直接返回undefined
+```
+
