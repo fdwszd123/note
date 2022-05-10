@@ -423,3 +423,33 @@ console.log(info.name);
 console.log(info.friend?.name);//当friend属性有的时候去读取name属性，没有friend属性的时候直接返回undefined
 ```
 
+### 4.!!和??
+
+ !!是把其他类型转化为布尔类型，类似于Boolean()
+
+??(空值合并操作符) 如果左侧有值就 赋值没有赋右边的默认值
+
+## 三.字面量类型
+
+字面量类型的意义就是必须结合联合类型
+
+```js
+type Align = "left" | "right" | "top";
+let align: Align = "top";
+align = "right";
+```
+
+### 1.字面量推理
+
+as const 可以将类型转化为具体的字面量类型
+
+## 四.类型缩小
+
+### 1.typeof
+
+### 2. ===,==,!==,!=,switch
+
+### 3.instance of
+
+
+
