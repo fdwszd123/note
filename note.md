@@ -362,7 +362,7 @@ any可以赋值给任意类型
 
 表示永远不会发生值的类型
 
-```JS
+```ts
 //永远不会返回值
 function foo(): never {
   while (true) {}
@@ -376,7 +376,7 @@ function error(): never {
 
 元组类型：多种元素的组合
 
-```js
+```ts
 let tom: [string, number] = ['Tom', 25];
 //当元组类型的元素越界的时候越界的元素会被限制为每个类型的联合类型
 ```
@@ -391,7 +391,7 @@ let tom: [string, number] = ['Tom', 25];
 
 ### 2.非空类型断言
 
-```js
+```ts
 function foo(message?: string) {
     //!表示一定不是空
   console.log(message!.length);
@@ -405,7 +405,7 @@ foo("fantasy");
 
 当对象的属性不存在时会短路，直接返回undefined，如果存在才会继续执行
 
-```js
+```ts
 type Person = {
   name: string;
   friend?: {
@@ -433,7 +433,7 @@ console.log(info.friend?.name);//当friend属性有的时候去读取name属性�
 
 字面量类型的意义就是必须结合联合类型
 
-```js
+```ts
 type Align = "left" | "right" | "top";
 let align: Align = "top";
 align = "right";
@@ -451,5 +451,128 @@ as const 可以将类型转化为具体的字面量类型
 
 ### 3.instance of
 
+### 4.in
 
+## 五.函数类型
+
+### 1.函数作为参数时定义类型
+
+```ts
+function foo() {}
+function fn(foo: () => void) {}
+fn(foo);
+
+```
+
+### 2.定义常量时编写函数类型
+
+```ts
+type addFnType = (num1: number, num2: number) => number;
+const add: addFnType = (a1: number, a2: number) => {
+  return a1 + a2;
+};
+
+```
+
+### 3.案例
+
+```ts
+const calc = (
+  n1: number,
+  n2: number,
+  fn: (num1: number, num2: number) => number
+) => {
+  return fn(n1, n2);
+};
+const res = calc(10, 20, function (a: number, b: number) {
+  return a + b;
+});
+console.log(res);
+```
+
+## 六.函数参数的可选类型
+
+### 1.可选类型
+
+可选类型必须写在必选类型的后面
+
+```ts
+function foo(x: number, y?: number) {
+  return x + y;
+}
+foo(2);
+```
+
+### 2.参数的默认值
+
+```ts
+function foo(x: number, y: number = 100) {
+  return x + y;
+}
+foo(2);
+
+```
+
+### 3.剩余参数
+
+```ts
+function add(...nums: number[]) {
+  let num: number = 0;
+  nums.forEach((ele) => {
+    num += ele;
+  });
+  console.log(num);
+}
+add(1, 2, 3);
+
+```
+
+### 4.this的默认推导
+
+```ts
+const info = {
+  name: "fantsy",
+  sayHellow() {
+    console.log(this.name + "hello");
+  },
+};
+info.sayHellow();
+
+```
+
+### 5.this的不明确类型
+
+```ts
+//明确指定this的类型
+type nameType = { name: string };
+function sayHello(this: nameType) {
+  console.log(this.name);
+}
+const info = {
+  name: "fantasy",
+  sayHello,
+};
+info.sayHello(); //fantasy
+//直接调用需要用call绑定this
+sayHello.call({ name: "jay" }); //jay
+
+```
+
+### 6.函数的重载
+
+函数的名称相同但是参数不同的几个函数，就是函数的重载
+
+```ts
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
+function add(a: any, b: any) {
+  return a + b;
+}
+console.log(add(1, 5));
+console.log(add("fan", "tasy"));
+```
+
+## 七.类
+
+​	
 
