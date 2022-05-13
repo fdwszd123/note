@@ -574,5 +574,468 @@ console.log(add("fan", "tasy"));
 
 ## 七.类
 
-​	
+### 1.类的继承
+
+```ts
+class Person {
+  name: string = "";
+  age: number = 0;
+  eat() {
+    console.log("eat");
+  }
+}
+class Student extends Person {
+  snum: number = 100001;
+  study() {
+    console.log("study");
+  }
+}
+class Teacher extends Person {
+  title: string = "教授";
+  teach() {
+    console.log("teach");
+  }
+}
+let stu = new Student();
+console.log(stu); //Student { name: '', age: 0, snum: 100001 }    继承了Person的name和age属性
+
+```
+
+
+
+### 2.super
+
+super可以调用父类的构造方法
+
+```ts
+class Person {
+  name: string;
+  age: number;
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+  eat() {
+    console.log("eat");
+  }
+}
+class Student extends Person {
+  snum: number;
+  constructor(name: string, age: number, snum: number) {
+    //super调用父类的构造方法，初始化了name和age
+    super(name, age);
+    this.snum = snum;
+  }
+  study() {
+    console.log("study");
+  }
+}
+class Teacher extends Person {
+  title: string = "教授";
+  teach() {
+    console.log("teach");
+  }
+}
+let stu = new Student("fantasy", 18, 10002);
+console.log(stu); //Student { name: 'fantasy', age: 18, snum: 10002 }
+	
+```
+
+### 3.方法重写 
+
+```ts
+class Person {
+  name: string;
+  age: number;
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+  eat() {
+    console.log("person-eat");
+  }
+}
+class Student extends Person {
+  snum: number;
+  constructor(name: string, age: number, snum: number) {
+    //super调用父类的构造方法，初始化了name和age
+    super(name, age);
+    this.snum = snum;
+  }
+  study() {
+    console.log("study");
+  }
+  //子类重写父类的方法
+  eat() {
+    //也可以同时执行父类的方法
+    super.eat();
+    console.log("stu-eat");
+  } 
+}
+class Teacher extends Person {
+  title: string = "教授";
+  teach() {
+    console.log("teach");
+  }
+}
+let stu = new Student("fantasy", 18, 10002);
+stu.eat();
+console.log(stu); //Student { name: 'fantasy', age: 18, snum: 10002 }
+
+```
+
+### 4.多态
+
+父类引用指向不同的子类对象,也就是不同的子类继承自同一个父类，
+
+```ts
+class Animal {
+  action() {
+    console.log("animal action");
+  }
+}
+class Fish extends Animal {
+  action() {
+    console.log("fish swimming");
+  }
+}
+class Dog extends Animal {
+  action() {
+    console.log("dog running");
+  }
+}
+//传入的是Animal但是有不同的表现形式
+function makeActions(animals: Animal[]) {
+  animals.forEach((animal) => {
+    animal.action();
+  });
+}
+makeActions([new Fish(), new Dog()]);
+
+```
+
+### 5.类的成员修饰符
+
+#### ①public
+
+public是默认的属性，是在任何地方可见公有的属性和方法
+
+#### ②private
+
+私有的只有在类的内部访问
+
+```ts
+class Person {
+  private name: string = "";
+  getName() {
+    //只能在内部访问
+    return this.name;
+  }
+}
+let p = new Person();
+// console.log(p.name);  因为name是私有的所以外部不能访问
+
+p.getName();
+```
+
+#### ③protected
+
+在类内部和子类中可以访问
+
+```ts
+class Person {
+  protected name: string = "fantasy";
+}
+class Student extends Person {
+  getName() {
+    return this.name;
+  }
+}
+let stu = new Student();
+console.log(stu);
+
+```
+
+#### ④readonly
+
+readonly是可以在构造器中赋值，赋值之后不可修改，成员本身是不可修改的，但是如果成员是一个对象的话，对象的属性是可以修改的
+
+```ts
+class Person {
+  protected name: string = "fantasy";
+  readonly age: number;
+  constructor(age: number) {
+    this.age = age;
+  }
+}
+let p = new Person(18);
+// p.age=19  age不可修改
+console.log(p);
+```
+
+#### ⑤getters/setters访问器
+
+可以通过访问器get  set获取和修改成员属性
+
+```ts
+class Person {
+  private _name: string;
+  constructor(name: string) {
+    this._name = name;
+  }
+  set name(newVal) {
+    this._name = newVal;
+  }
+  get name() {
+    return this._name;
+  }
+}
+let p = new Person("fan");
+console.log(p.name); //fan
+p.name = "fantasy";
+console.log(p); //Person { _name: 'fantasy' }
+```
+
+### 6.类的静态成员
+
+静态成员不需要new出来对象来使用，直接通过类就可以使用
+
+```ts
+class Person {
+  static birthday: string = "1998-10-10";
+  static smile() {
+    console.log(":):):)");
+  }
+}
+console.log(Person.birthday);
+console.log(Person.smile());
+
+```
+
+### 7.抽象类abstract
+
+继承是多态的前提，父类本身并不需要对某些方法进行具体的实现，所以父类中定义的方法，可以为抽象方法。
+
+①抽象函数必须存在于抽象类当中
+
+②抽象类无法被实例化
+
+③抽象类当中的抽象方法子类必须实现 除非子类也是一个抽象类
+
+```ts
+//计算面积可能接收不同的形状
+function makeArea(shape: Shape) {
+  return shape.getArea();
+}
+
+//抽象函数必须存在在抽象类中
+abstract class Shape {
+  //这里Shape的getArea是没实现的如果直接传new Shape的话也是错误的
+  //   getArea() {}
+
+  //抽象方法是没有函数体的
+  abstract getArea();
+}
+// new Shape()  抽象类不能被实例化
+//抽象类当中的抽象方法子类必须实现 
+
+class Circle extends Shape {
+  private r: number;
+  constructor(r: number) {
+    super();
+    this.r = r;
+  }
+  getArea() {
+    return this.r * this.r * Math.PI;
+  }
+}
+class Square extends Shape {
+  private width: number;
+  private height: number;
+  constructor(width: number, height: number) {
+    super();
+    this.width = width;
+    this.height = height;
+  }
+  getArea() {
+    return this.width * this.height;
+  }
+}
+let c = makeArea(new Circle(2));
+let s = makeArea(new Square(2, 4));
+console.log(c, s);
+```
+
+### 8.类的类型
+
+类也可以作为一种类型
+
+```ts
+class Person {
+  name: string = "fantasy";
+  eat() {}
+}
+const p1 = new Person(); //p1的类型是Person
+const p2: Person = {
+  name: "fan",
+  eat() {},
+};
+```
+
+## 八.接口
+
+### 1.接口定义对象类型
+
+ts中可以使用类型别名(type)声明对象类型 ，还可以用接口(interface)声明类型
+
+```ts
+interface IIfoType {
+  readonly name: string;
+  age: number;
+  firend?: {
+    name: string;
+  };
+}
+let info: IIfoType = {
+  name: "fantasy",
+  age: 18,
+  firend: {
+    name: "jay",
+  },
+};
+```
+
+### 2.接口定义索引类型
+
+```ts
+interface IIndexLanguage {
+  [index: number]: string;
+}
+const language: IIndexLanguage = {
+  0: "html",
+  1: "css",
+  2: "js",
+  3: "vue",
+};
+
+```
+
+### 3.接口定义函数类型
+
+``` js
+interface IcalcFn {
+  (a: number, b: number): number;
+}
+
+function calc(a: number, b: number, calcFn: IcalcFn) {
+  return calcFn(a, b);
+}
+const add: IcalcFn = (a, b) => {
+  return a + b;
+};
+let res = calc(1, 2, add);
+console.log(res);
+
+export {};
+
+```
+
+### 4.接口的继承
+
+```ts
+interface IFly {
+  fly: () => void;
+}
+interface ISwim {
+  swim: () => void;
+}
+interface IAction extends IFly, ISwim {
+  run: () => void;
+}
+const actions: IAction = {
+  fly() {},
+  swim() {},
+  run() {},
+};
+export {};
+
+```
+
+### 5.交叉类型
+
+```ts
+interface ITypeA {
+  name: string;
+  age: number;
+}
+interface ITypeB {
+  sex: string;
+}
+
+type typeA = ITypeA & ITypeB;
+// 交叉类型typeA
+// {
+//     name: string,
+//     age: number,
+//     sex:string
+// }
+const info: typeA = {
+  name: "fantasy",
+  age: 18,
+  sex: "男",
+};
+export {};
+
+```
+
+### ①联合类型的交叉类型
+
+```ts
+type typeA = "a" | "b" | "v";
+type typeB = "c" | "b" | "e";
+type myType = typeA & typeB;
+//交叉后的类型type='b'
+const a: myType = "b";
+
+```
+
+### 6.接口的实现
+
+继承：只实现单继承
+实现：实现接口，可以实现多个接口
+
+```ts
+interface ISwimm {
+  swimm: () => void;
+}
+interface IRun {
+  run: () => void;
+}
+//类实现接口
+class Animal {}
+
+//继承：只实现单继承
+//实现：实现接口，可以实现多个接口
+class Fish extends Animal implements IRun, ISwimm {
+  swimm() {
+    console.log("swimming");
+  }
+  run() {
+    console.log("running");
+  }
+}
+class Chad implements ISwimm {
+  swimm() {}
+}
+//所有实现了接口的类对应的对象都可以传入，
+function swimming(swimm: ISwimm) {
+  swimm.swimm();
+}
+//实现了接口的不同的类
+swimming(new Fish());
+swimming(new Chad());
+
+swimming({ swimm: () => {} }); //字面量也可以直接传入
+
+```
 
