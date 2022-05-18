@@ -1039,3 +1039,108 @@ swimming({ swimm: () => {} }); //字面量也可以直接传入
 
 ```
 
+### 7.interface和type的区别
+
+interface通常用来定义对象类型
+
+interface可以重复的对某个接口来定义属性和方法
+
+type定义的是别名，别名是不能重复的
+
+```ts
+interface IFoo {
+  name: string;
+}
+interface IFoo {
+  age: number;
+}
+//接口可以是同一个名字，会把所有属性合并
+const info: IFoo = {
+  name: "fantasy",
+  age: 18,
+};
+
+```
+
+### 8.字面量赋值
+
+```ts
+interface IPerson {
+  name: string;
+  age: number;
+}
+const info = {
+  name: "fantasy",
+  age: 18,
+  sex: "男",
+};
+function foo(p: IPerson) {
+  console.log(p.name);
+  console.log(p.age);
+  // console.log(p.sex);  这里不能取到sex属性
+}
+foo(info); //info的类型不符合IPerson的类型但是ts做了类型擦除不会报错
+
+```
+
+## 九.枚举
+
+```TS
+enum Direction {
+  LEFT,
+  RIGHT,
+  TOP,
+  BOTTOM,
+}
+```
+
+## 十.泛型
+
+泛型就是将类型进行参数化
+
+### 1.类型参数化
+
+在定义函数的时候不决定参数的类型，在调用函数的时候再传入参数的类型	
+
+```ts
+function foo<Type>(num: Type): Type {
+  return num;
+}
+foo<number>(30);
+foo<string>("fantasy");
+foo<string[]>(["fan"]);
+foo(30)//不传类型的话，会进行类型推导，默认推导的类型为字面量类型
+```
+
+### 2.泛型接口
+
+```ts
+interface IPerson<T> {
+  name: T;
+}
+const p: IPerson<string> = {
+  name: "fanatsy",
+};
+
+const p1: IPerson<number> = {
+  name: 18,
+};
+
+```
+
+### 2.泛型类
+
+```ts
+class Point<T> {
+  x: T;
+  y: T;
+  constructor(x: T, y: T) {
+    this.x = x;
+    this.y = y;
+  }
+}
+const p1: Point<string> = new Point("1", "2");
+const p2: Point<number> = new Point(3, 4);
+
+```
+
