@@ -330,6 +330,56 @@ store.state.b // -> moduleB 的状态
 
 将一个回调推迟到下一个Dom更新后去执行，在更改了一些数据后等dom更新后立即使用它
 
+# axios
+
++++++
+
+## 一.默认配置
+
+axios的默认配置可以配置默认的baseUrl，timeOut，headers等
+
+```ts
+axios.defaults.baseURL = 'http://httpbin.org'
+axios.defaults.timeout =  10000
+
+```
+
+## 二. 拦截器
+
+### 1.请求拦截器
+
+```ts
+axios.interceptors.request.use(
+  (config) => {
+    //请求成功拦截到的请求具体的参数
+    return config
+  },
+  (err) => {
+    //请求失败
+    return err
+  }
+)
+```
+
+
+
+### 2.响应拦截器
+
+```ts
+axios.interceptors.response.use(
+  (res) => {
+    //拦截到服务器响应成功
+    return res
+  },
+  (err) => {
+    //拦截到服务器响应失败
+    return err
+  }
+)
+```
+
+
+
 # TS
 
 ++++
@@ -1143,4 +1193,45 @@ const p1: Point<string> = new Point("1", "2");
 const p2: Point<number> = new Point(3, 4);
 
 ```
+
+### 3.泛型的类型约束
+
+```ts
+interface ILength {
+  length: number;
+}
+function getLength<T extends ILength>(arg: T) {
+  console.log(arg.length);
+}
+getLength("123");
+getLength(["123"]);
+getLength({ length: 10 });
+// getLength(123)   没有lenght属性
+
+```
+
+## 十一.模块化
+
+### 1.命名空间
+
+​	把模块再划分作用域
+
+```ts
+export namespace time {
+  export function format() {}
+}
+export namespace price {
+  export function format() {}
+}
+```
+
+### 2.类型查找
+
+```ts
+declare module 'lodash'{}
+declare let name: string;
+
+```
+
+
 
